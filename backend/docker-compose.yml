@@ -1,0 +1,24 @@
+name: coc-phoenix
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: coc-phoenix-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: coc_phoenix
+    ports:
+      # Override with POSTGRES_PORT=5433 if something already owns 5432 locally.
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - coc-phoenix-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d coc_phoenix"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  coc-phoenix-pgdata:

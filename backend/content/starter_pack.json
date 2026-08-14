@@ -1,0 +1,304 @@
+{
+  "pack": {
+    "id": "starter-modern",
+    "name": "Modern Starter Pack",
+    "license": "fan",
+    "version": "1",
+    "era": "modern"
+  },
+  "baseTiers": {
+    "_comment": "Our own numbers, not copied from any rulebook. Four tiers by how much of the skill an ordinary modern adult already has. 'formula' bases live in the skill's base.kind field.",
+    "common": 20,
+    "familiar": 10,
+    "trained": 5,
+    "formal": 1
+  },
+  "skills": [
+    { "id": "appraise", "name": "Appraise", "base": { "kind": "fixed", "value": 5 } },
+    { "id": "art-craft-acting", "name": "Art/Craft (Acting)", "base": { "kind": "fixed", "value": 5 } },
+    { "id": "art-craft-carpentry", "name": "Art/Craft (Carpentry)", "base": { "kind": "fixed", "value": 5 }, "affinity": "dex" },
+    { "id": "art-craft-cooking", "name": "Art/Craft (Cooking)", "base": { "kind": "fixed", "value": 5 } },
+    { "id": "art-craft-cosmetology", "name": "Art/Craft (Cosmetology)", "base": { "kind": "fixed", "value": 5 }, "affinity": "dex" },
+    { "id": "art-craft-interior-design", "name": "Art/Craft (Interior Design)", "base": { "kind": "fixed", "value": 5 } },
+    { "id": "art-craft-music", "name": "Art/Craft (Music)", "base": { "kind": "fixed", "value": 5 }, "affinity": "dex" },
+    { "id": "art-craft-photography", "name": "Art/Craft (Photography)", "base": { "kind": "fixed", "value": 5 } },
+    { "id": "art-craft-video", "name": "Art/Craft (Video)", "base": { "kind": "fixed", "value": 5 } },
+    { "id": "art-craft-writing", "name": "Art/Craft (Writing)", "base": { "kind": "fixed", "value": 5 } },
+    { "id": "charm", "name": "Charm", "base": { "kind": "fixed", "value": 10 } },
+    { "id": "climb", "name": "Climb", "base": { "kind": "fixed", "value": 20 }, "affinity": "str" },
+    { "id": "computer-use", "name": "Computer Use", "base": { "kind": "fixed", "value": 10 } },
+    { "id": "credit-rating", "name": "Credit Rating", "base": { "kind": "fixed", "value": 0 }, "creditRating": true },
+    { "id": "disguise", "name": "Disguise", "base": { "kind": "fixed", "value": 5 } },
+    { "id": "dodge", "name": "Dodge", "base": { "kind": "dexHalf" }, "affinity": "dex" },
+    { "id": "drive-auto", "name": "Drive Auto", "base": { "kind": "fixed", "value": 20 }, "affinity": "dex" },
+    { "id": "electrical-repair", "name": "Electrical Repair", "base": { "kind": "fixed", "value": 10 }, "affinity": "dex" },
+    { "id": "electronics", "name": "Electronics", "base": { "kind": "fixed", "value": 1 } },
+    { "id": "fast-talk", "name": "Fast Talk", "base": { "kind": "fixed", "value": 10 } },
+    { "id": "fighting-brawl", "name": "Fighting (Brawl)", "base": { "kind": "fixed", "value": 20 }, "affinity": "str" },
+    { "id": "firearms-handgun", "name": "Firearms (Handgun)", "base": { "kind": "fixed", "value": 10 }, "affinity": "dex" },
+    { "id": "firearms-rifle-shotgun", "name": "Firearms (Rifle/Shotgun)", "base": { "kind": "fixed", "value": 10 }, "affinity": "dex" },
+    { "id": "first-aid", "name": "First Aid", "base": { "kind": "fixed", "value": 20 } },
+    { "id": "history", "name": "History", "base": { "kind": "fixed", "value": 5 } },
+    { "id": "intimidate", "name": "Intimidate", "base": { "kind": "fixed", "value": 10 }, "affinity": "str" },
+    { "id": "jump", "name": "Jump", "base": { "kind": "fixed", "value": 20 }, "affinity": "str" },
+    { "id": "language-latin", "name": "Language (Latin)", "base": { "kind": "fixed", "value": 1 } },
+    { "id": "language-other", "name": "Language (Other)", "base": { "kind": "fixed", "value": 1 } },
+    { "id": "language-own", "name": "Language (Own)", "base": { "kind": "edu" } },
+    { "id": "law", "name": "Law", "base": { "kind": "fixed", "value": 5 } },
+    { "id": "library-use", "name": "Library Use", "base": { "kind": "fixed", "value": 20 } },
+    { "id": "listen", "name": "Listen", "base": { "kind": "fixed", "value": 20 } },
+    { "id": "locksmith", "name": "Locksmith", "base": { "kind": "fixed", "value": 1 }, "affinity": "dex" },
+    { "id": "mechanical-repair", "name": "Mechanical Repair", "base": { "kind": "fixed", "value": 10 }, "affinity": "dex" },
+    { "id": "medicine", "name": "Medicine", "base": { "kind": "fixed", "value": 1 } },
+    { "id": "natural-world", "name": "Natural World", "base": { "kind": "fixed", "value": 10 } },
+    { "id": "navigate", "name": "Navigate", "base": { "kind": "fixed", "value": 10 } },
+    { "id": "occult", "name": "Occult", "base": { "kind": "fixed", "value": 5 } },
+    { "id": "persuade", "name": "Persuade", "base": { "kind": "fixed", "value": 10 } },
+    { "id": "psychology", "name": "Psychology", "base": { "kind": "fixed", "value": 10 } },
+    { "id": "science-astronomy", "name": "Science (Astronomy)", "base": { "kind": "fixed", "value": 1 } },
+    { "id": "science-biology", "name": "Science (Biology)", "base": { "kind": "fixed", "value": 1 } },
+    { "id": "science-chemistry", "name": "Science (Chemistry)", "base": { "kind": "fixed", "value": 1 } },
+    { "id": "science-pharmacy", "name": "Science (Pharmacy)", "base": { "kind": "fixed", "value": 1 } },
+    { "id": "science-physics", "name": "Science (Physics)", "base": { "kind": "fixed", "value": 1 } },
+    { "id": "sleight-of-hand", "name": "Sleight of Hand", "base": { "kind": "fixed", "value": 10 }, "affinity": "dex" },
+    { "id": "spot-hidden", "name": "Spot Hidden", "base": { "kind": "fixed", "value": 20 } },
+    { "id": "stealth", "name": "Stealth", "base": { "kind": "fixed", "value": 20 }, "affinity": "dex" },
+    { "id": "survival", "name": "Survival", "base": { "kind": "fixed", "value": 10 }, "affinity": "con" },
+    { "id": "swim", "name": "Swim", "base": { "kind": "fixed", "value": 20 }, "affinity": "con" },
+    { "id": "throw", "name": "Throw", "base": { "kind": "fixed", "value": 20 }, "affinity": "dex" },
+    { "id": "track", "name": "Track", "base": { "kind": "fixed", "value": 10 }, "affinity": "con" }
+  ],
+  "careers": [
+    {
+      "id": "doctor",
+      "name": "Doctor",
+      "blurb": "You have told people the worst news of their lives, and kept your hands steady.",
+      "formulaTerms": [{ "characteristic": "edu", "multiplier": 4 }],
+      "signatureSkill": "medicine",
+      "supportingSkills": ["first-aid", "science-biology", "science-pharmacy", "psychology", "language-latin"],
+      "creditRating": { "min": 30, "max": 80 }
+    },
+    {
+      "id": "professor",
+      "name": "Professor",
+      "blurb": "Somewhere in your field is a footnote nobody has followed up. Yet.",
+      "formulaTerms": [{ "characteristic": "edu", "multiplier": 4 }],
+      "signatureSkill": "library-use",
+      "supportingSkills": ["history", "language-other", { "choice": "science" }, "persuade", "psychology"],
+      "choiceSlots": [
+        {
+          "id": "science",
+          "prompt": "What's your field?",
+          "options": [
+            { "id": "biology", "label": "Biology", "skill": "science-biology" },
+            { "id": "chemistry", "label": "Chemistry", "skill": "science-chemistry" },
+            { "id": "physics", "label": "Physics", "skill": "science-physics" },
+            { "id": "astronomy", "label": "Astronomy", "skill": "science-astronomy" }
+          ]
+        }
+      ],
+      "creditRating": { "min": 20, "max": 70 }
+    },
+    {
+      "id": "antiquarian",
+      "name": "Antiquarian",
+      "blurb": "You can tell what a thing is worth, and sometimes what it wants.",
+      "formulaTerms": [{ "characteristic": "edu", "multiplier": 4 }],
+      "signatureSkill": "appraise",
+      "supportingSkills": ["history", "library-use", "language-other", "spot-hidden", "navigate"],
+      "creditRating": { "min": 30, "max": 70 }
+    },
+    {
+      "id": "journalist",
+      "name": "Journalist",
+      "blurb": "You ask the second question, the one people flinch at.",
+      "formulaTerms": [{ "characteristic": "edu", "multiplier": 4 }],
+      "signatureSkill": "fast-talk",
+      "supportingSkills": ["library-use", "psychology", "computer-use", "art-craft-photography", "persuade"],
+      "creditRating": { "min": 9, "max": 30 }
+    },
+    {
+      "id": "private-investigator",
+      "name": "Private Investigator",
+      "blurb": "Half the job is waiting in a parked car. The other half is why you carry a flashlight.",
+      "formulaTerms": [
+        { "characteristic": "edu", "multiplier": 2 },
+        { "characteristic": "dex", "multiplier": 2 }
+      ],
+      "signatureSkill": "spot-hidden",
+      "supportingSkills": ["law", "library-use", "disguise", "psychology", "firearms-handgun", "stealth"],
+      "creditRating": { "min": 9, "max": 30 }
+    },
+    {
+      "id": "police-detective",
+      "name": "Police Detective",
+      "blurb": "You have read a thousand statements and believed maybe six.",
+      "formulaTerms": [
+        { "characteristic": "edu", "multiplier": 2 },
+        { "characteristic": "int", "multiplier": 2 }
+      ],
+      "signatureSkill": "psychology",
+      "supportingSkills": ["firearms-handgun", "law", "listen", "spot-hidden", "intimidate"],
+      "creditRating": { "min": 20, "max": 50 }
+    },
+    {
+      "id": "soldier-veteran",
+      "name": "Soldier (Veteran)",
+      "blurb": "You came home. Parts of it did not.",
+      "formulaTerms": [
+        { "characteristic": "edu", "multiplier": 2 },
+        { "characteristic": "str", "multiplier": 2 }
+      ],
+      "signatureSkill": "firearms-rifle-shotgun",
+      "supportingSkills": ["fighting-brawl", "first-aid", "survival", "stealth", "climb"],
+      "creditRating": { "min": 9, "max": 30 }
+    },
+    {
+      "id": "criminal",
+      "name": "Criminal",
+      "blurb": "Every lock is a promise someone else made. You disagree.",
+      "formulaTerms": [
+        { "characteristic": "edu", "multiplier": 2 },
+        { "characteristic": "dex", "multiplier": 2 }
+      ],
+      "signatureSkill": "locksmith",
+      "supportingSkills": ["sleight-of-hand", "stealth", "fighting-brawl", "fast-talk", "spot-hidden"],
+      "creditRating": { "min": 5, "max": 65 }
+    },
+    {
+      "id": "clergy",
+      "name": "Clergy",
+      "blurb": "People confess things to you they have never said out loud.",
+      "formulaTerms": [{ "characteristic": "edu", "multiplier": 4 }],
+      "signatureSkill": "persuade",
+      "supportingSkills": ["psychology", "history", "language-latin", "first-aid", "listen"],
+      "creditRating": { "min": 9, "max": 60 }
+    },
+    {
+      "id": "influencer",
+      "name": "Influencer",
+      "blurb": "Two hundred thousand people watch your face. None of them know you.",
+      "formulaTerms": [
+        { "characteristic": "app", "multiplier": 2 },
+        { "characteristic": "edu", "multiplier": 2 }
+      ],
+      "signatureSkill": "charm",
+      "supportingSkills": [{ "choice": "medium" }, "fast-talk", "psychology", "computer-use"],
+      "choiceSlots": [
+        {
+          "id": "medium",
+          "prompt": "What's your medium?",
+          "options": [
+            { "id": "video", "label": "Video", "skill": "art-craft-video" },
+            { "id": "photography", "label": "Photography", "skill": "art-craft-photography" },
+            { "id": "music", "label": "Music", "skill": "art-craft-music" },
+            { "id": "writing", "label": "Writing", "skill": "art-craft-writing" }
+          ]
+        }
+      ],
+      "creditRating": { "min": 50, "max": 99 }
+    },
+    {
+      "id": "jack-of-all-trades",
+      "name": "Jack of All Trades",
+      "blurb": "You are nobody in particular. That may be why you're still alive.",
+      "formulaTerms": [
+        { "characteristic": "edu", "multiplier": 2 },
+        { "characteristic": "bestOther", "multiplier": 2 }
+      ],
+      "signatureSkill": null,
+      "supportingSkills": ["drive-auto", "first-aid", "spot-hidden", "listen"],
+      "slotsFromHobbies": true,
+      "bonuses": { "luck": 10 },
+      "creditRating": { "min": 9, "max": 50 }
+    },
+    {
+      "id": "grid-operations-engineer",
+      "name": "Grid Operations Engineer",
+      "blurb": "You keep the city lit. You have seen what the meters do at 3 a.m.",
+      "formulaTerms": [{ "characteristic": "edu", "multiplier": 4 }],
+      "signatureSkill": "electrical-repair",
+      "supportingSkills": ["electronics", "computer-use", "mechanical-repair", "spot-hidden", "climb"],
+      "creditRating": { "min": 30, "max": 60 }
+    },
+    {
+      "id": "interior-architect",
+      "name": "Interior Architect",
+      "blurb": "You decide how a room makes a person feel, and they never notice you did.",
+      "formulaTerms": [
+        { "characteristic": "edu", "multiplier": 2 },
+        { "characteristic": "app", "multiplier": 2 }
+      ],
+      "signatureSkill": "art-craft-interior-design",
+      "supportingSkills": ["appraise", "charm", "spot-hidden", "psychology", "computer-use"],
+      "creditRating": { "min": 30, "max": 70 }
+    },
+    {
+      "id": "nail-artist",
+      "name": "Nail Artist",
+      "blurb": "Forty minutes of held hands. Your clients tell you everything.",
+      "formulaTerms": [
+        { "characteristic": "app", "multiplier": 2 },
+        { "characteristic": "dex", "multiplier": 2 }
+      ],
+      "signatureSkill": "art-craft-cosmetology",
+      "supportingSkills": ["charm", "listen", "psychology", "fast-talk", "sleight-of-hand"],
+      "creditRating": { "min": 9, "max": 40 }
+    },
+    {
+      "id": "seance-medium",
+      "name": "Séance Medium",
+      "blurb": "Most nights you are performing. Most.",
+      "formulaTerms": [
+        { "characteristic": "pow", "multiplier": 2 },
+        { "characteristic": "app", "multiplier": 2 }
+      ],
+      "signatureSkill": "occult",
+      "supportingSkills": ["psychology", "art-craft-acting", "charm", "listen", "sleight-of-hand"],
+      "creditRating": { "min": 9, "max": 40 }
+    },
+    {
+      "id": "funerary-director",
+      "name": "Funerary Director",
+      "blurb": "You arrange the last room anyone will ever be seen in.",
+      "formulaTerms": [
+        { "characteristic": "edu", "multiplier": 2 },
+        { "characteristic": "app", "multiplier": 2 }
+      ],
+      "signatureSkill": "psychology",
+      "supportingSkills": ["science-biology", "persuade", "history", "occult", "drive-auto"],
+      "creditRating": { "min": 20, "max": 50 }
+    },
+    {
+      "id": "professional-mma-fighter",
+      "name": "Professional MMA Fighter",
+      "blurb": "You have been hit hard enough to see the shape of your own thoughts.",
+      "formulaTerms": [
+        { "characteristic": "str", "multiplier": 2 },
+        { "characteristic": "dex", "multiplier": 2 }
+      ],
+      "signatureSkill": "fighting-brawl",
+      "supportingSkills": ["dodge", "intimidate", "jump", "psychology"],
+      "creditRating": { "min": 9, "max": 40 }
+    }
+  ],
+  "hobbies": [
+    { "id": "photography", "name": "Photography", "blurb": "You notice the thing in the corner of the frame.", "primarySkill": "art-craft-photography", "secondarySkill": "spot-hidden" },
+    { "id": "amateur-boxing", "name": "Amateur boxing", "blurb": "Three rounds twice a week, and a decent chin.", "primarySkill": "fighting-brawl", "secondarySkill": "dodge" },
+    { "id": "hunting-trips", "name": "Hunting trips", "blurb": "Cold mornings, long waits, and you know what you shot at.", "primarySkill": "firearms-rifle-shotgun", "secondarySkill": "track" },
+    { "id": "bookworm", "name": "Bookworm", "blurb": "You have a library card and opinions about indexes.", "primarySkill": "library-use", "secondarySkill": "history" },
+    { "id": "motoring-enthusiast", "name": "Motoring enthusiast", "blurb": "You know the sound your engine makes when it is lying.", "primarySkill": "drive-auto", "secondarySkill": "mechanical-repair" },
+    { "id": "tinkering", "name": "Tinkering", "blurb": "Nothing in your flat is unopened.", "primarySkill": "mechanical-repair", "secondarySkill": "electronics" },
+    { "id": "occult-curiosity", "name": "Occult curiosity", "blurb": "A podcast habit that got out of hand.", "primarySkill": "occult", "secondarySkill": "library-use" },
+    { "id": "people-watching", "name": "People-watching", "blurb": "One coffee, two hours, everyone's business.", "primarySkill": "spot-hidden", "secondarySkill": "psychology" },
+    { "id": "social-butterfly", "name": "Social butterfly", "blurb": "You remember names, and people remember that.", "primarySkill": "charm", "secondarySkill": "listen" },
+    { "id": "volunteer-first-aider", "name": "Volunteer first-aider", "blurb": "High-vis vest, folding table, somebody's worst day.", "primarySkill": "first-aid", "secondarySkill": "psychology" },
+    { "id": "poker-nights", "name": "Poker nights", "blurb": "You are not playing the cards.", "primarySkill": "psychology", "secondarySkill": "sleight-of-hand" },
+    { "id": "stage-magic", "name": "Stage magic", "blurb": "The trick is that the hand is already empty.", "primarySkill": "sleight-of-hand", "secondarySkill": "charm" },
+    { "id": "weekend-carpenter", "name": "Weekend carpenter", "blurb": "The shelves are level. Mostly.", "primarySkill": "art-craft-carpentry", "secondarySkill": "mechanical-repair" },
+    { "id": "amateur-gastronome", "name": "Amateur gastronome", "blurb": "You know where things grow and what they cost.", "primarySkill": "art-craft-cooking", "secondarySkill": "natural-world" },
+    { "id": "makeup-artistry", "name": "Makeup artistry", "blurb": "You can make a face into a different face.", "primarySkill": "disguise", "secondarySkill": "charm" },
+    { "id": "online-gaming", "name": "Online gaming", "blurb": "Six people, one headset, a shared read on strangers.", "primarySkill": "computer-use", "secondarySkill": "psychology" },
+    { "id": "urban-exploration", "name": "Urban exploration", "blurb": "The building has been empty for nine years. The door was open.", "primarySkill": "stealth", "secondarySkill": "climb" }
+  ]
+}

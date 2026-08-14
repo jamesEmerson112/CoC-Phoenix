@@ -1,0 +1,5 @@
+/target
+.env
+*.pdb
+# `cargo run --bin gen-seed <path>` dumps; the JSON is the source of truth.
+/content/*.sql
