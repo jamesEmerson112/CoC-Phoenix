@@ -1,0 +1,727 @@
+<title>Phoenix Investigator Intake</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: one phone-width column (max 480px), sticky step header, fixed bottom action bar.
+   A single committed dark look: the spec's "3 a.m. group chat crossed with a public-records office". */
+:root {
+  color-scheme: dark;
+  --bg: #0f141b;
+  --panel: #171e28;
+  --panel-2: #1f2834;
+  --line: #2c3746;
+  --fg: #e7ecf1;
+  --muted: #95a2b3;
+  --faint: #5f6c7d;
+  --accent: #5cc0c9;
+  --accent-ink: #062126;
+  --amber: #e7ad4f;
+  --amber-ink: #2a1a02;
+  --rose: #e08cb4;
+  --danger: #f08a7a;
+  --bar-base: #4b596b;
+  --f-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html, body { min-height: 100%; }
+body { background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 15px; line-height: 1.5; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+h1, h2, h3 { font-family: var(--f-display); margin: 0; line-height: 1.15; text-wrap: balance; }
+h2 { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.015em; }
+h3 { font-size: 1.05rem; font-weight: 700; }
+p { margin: 0; }
+.mono { font-family: var(--f-mono); }
+.muted { color: var(--muted); }
+.tnum { font-variant-numeric: tabular-nums; }
+
+.app { max-width: 480px; margin: 0 auto; }
+.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 12px 10px; border-bottom: 1px solid var(--line);
+  display: flex; flex-direction: column; gap: 8px;
+}
+.top-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.brand { font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.files-btn { background: none; border: 1px solid var(--line); border-radius: 999px; padding: 3px 11px; font-size: 0.78rem; color: var(--muted); font-family: var(--f-mono); }
+.progress { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; }
+.progress button { height: 22px; background: none; border: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; align-items: stretch; }
+.progress i { display: block; height: 3px; border-radius: 2px; background: var(--line); }
+.progress span { font-family: var(--f-mono); font-size: 0.6rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.progress .done i { background: var(--accent); opacity: 0.55; }
+.progress .cur i { background: var(--accent); opacity: 1; }
+.progress .cur span { color: var(--fg); }
+.vitals { display: flex; gap: 14px; font-family: var(--f-mono); font-size: 0.74rem; color: var(--muted); font-variant-numeric: tabular-nums; min-height: 1.1em; }
+.vitals b { color: var(--fg); font-weight: 500; }
+
+main {
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 22px calc(110px + env(safe-area-inset-bottom, 0px));
+  display: flex; flex-direction: column; gap: 22px;
+}
+.head { display: flex; flex-direction: column; gap: 6px; }
+.eyebrow { font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+.sub { color: var(--muted); max-width: 52ch; }
+
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(8px); border-top: 1px solid var(--line);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-top: 12px; padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+}
+.bar-in { max-width: 448px; margin: 0 auto; display: flex; gap: 10px; }
+.btn { border-radius: 12px; padding: 12px 16px; font-weight: 600; border: 1px solid var(--line); background: var(--panel); text-align: center; }
+.btn.pri { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); flex: 1; }
+.btn.luck { background: var(--amber); color: var(--amber-ink); border-color: var(--amber); }
+.btn.ghost { background: none; }
+.btn.wide { width: 100%; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn.big { padding: 18px; font-size: 1.1rem; font-family: var(--f-display); font-weight: 700; letter-spacing: 0.01em; }
+.linkish { background: none; border: 0; padding: 0; color: var(--accent); text-decoration: underline; text-underline-offset: 3px; font-size: 0.9rem; }
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.field input { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; font-size: 1.05rem; width: 100%; }
+.field input:focus { border-color: var(--accent); outline: none; }
+.field small { color: var(--faint); font-size: 0.82rem; }
+.portrait { display: flex; gap: 14px; align-items: center; }
+.portrait .ph { width: 64px; height: 64px; border-radius: 50%; border: 1.5px dashed var(--line); display: grid; place-items: center; font-family: var(--f-display); font-weight: 700; font-size: 1.3rem; color: var(--muted); flex: none; }
+.portrait p { font-size: 0.86rem; color: var(--faint); }
+
+.choices { display: flex; flex-direction: column; gap: 10px; }
+.choice {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; text-align: left;
+  display: flex; flex-direction: column; gap: 6px; width: 100%;
+}
+.choice[aria-pressed="true"] { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 9%, var(--panel)); }
+.choice .row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.choice .ages { font-family: var(--f-mono); font-size: 0.8rem; color: var(--muted); white-space: nowrap; }
+.choice .copy { font-style: italic; color: var(--fg); }
+.choice .fx { font-family: var(--f-mono); font-size: 0.76rem; color: var(--muted); }
+.tag { font-family: var(--f-mono); font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+.tag.fit { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.tag.amber { border-color: var(--amber); color: var(--amber); }
+
+.toggles { display: flex; flex-wrap: wrap; gap: 8px; }
+.toggle { display: inline-flex; align-items: center; gap: 8px; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; font-size: 0.84rem; color: var(--muted); }
+.toggle[aria-pressed="true"] { color: var(--fg); border-color: var(--accent); }
+.toggle i { width: 26px; height: 15px; border-radius: 999px; background: var(--line); position: relative; flex: none; }
+.toggle i::after { content: ""; position: absolute; top: 2px; left: 2px; width: 11px; height: 11px; border-radius: 50%; background: var(--muted); transition: transform .15s; }
+.toggle[aria-pressed="true"] i { background: var(--accent); }
+.toggle[aria-pressed="true"] i::after { transform: translateX(11px); background: var(--accent-ink); }
+
+.phases { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.phase { background: none; border: 1px solid var(--line); border-radius: 10px; padding: 8px 6px; font-size: 0.8rem; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 1px; }
+.phase b { font-family: var(--f-mono); font-size: 0.68rem; font-weight: 500; color: var(--faint); }
+.phase[aria-current="step"] { border-color: var(--amber); color: var(--fg); }
+.phase.ok b { color: var(--accent); }
+
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.stat { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 10px 4px 8px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0; }
+.stat small { font-family: var(--f-mono); font-size: 0.68rem; letter-spacing: 0.08em; color: var(--muted); }
+.stat b { font-family: var(--f-display); font-size: 1.6rem; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.stat .faces { font-family: var(--f-mono); font-size: 0.66rem; color: var(--faint); letter-spacing: 0.04em; }
+.stat .hf { font-family: var(--f-mono); font-size: 0.66rem; color: var(--muted); }
+.stat.adj b { color: var(--rose); }
+.note { font-size: 0.86rem; color: var(--muted); border-left: 2px solid var(--line); padding-left: 10px; }
+.note b { color: var(--fg); font-weight: 500; }
+
+.checks { display: flex; flex-direction: column; gap: 8px; }
+.check { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; }
+.check .q { font-family: var(--f-mono); font-size: 0.78rem; color: var(--muted); }
+.check .v { font-family: var(--f-display); font-weight: 700; font-size: 1.1rem; }
+.check .v.yes { color: var(--accent); }
+.check .v.no { color: var(--faint); }
+.check.unused { opacity: 0.5; }
+
+.luck-stage { background: radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--amber) 16%, var(--panel)) 0%, var(--panel) 70%); border: 1px solid var(--line); border-radius: 18px; padding: 26px 16px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+.luck-stage .num { font-family: var(--f-display); font-weight: 800; font-size: 5.2rem; line-height: 1; color: var(--amber); font-variant-numeric: tabular-nums; }
+.luck-stage .pair { display: flex; gap: 10px; font-family: var(--f-mono); font-size: 0.85rem; color: var(--muted); }
+.luck-stage .pair s { color: var(--faint); }
+
+.manual { display: flex; flex-direction: column; gap: 14px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+.mgrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.mgrid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.mgrid .field input { padding: 9px 8px; font-size: 1rem; text-align: center; font-family: var(--f-mono); }
+.mgrid .field label { text-align: center; font-size: 0.66rem; }
+
+.cards { display: flex; flex-direction: column; gap: 10px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.card[data-selected="true"] { border-color: var(--accent); }
+.card-btn { width: 100%; background: none; border: 0; padding: 14px 16px; text-align: left; display: flex; flex-direction: column; gap: 6px; }
+.card-btn .row { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+.card-btn .blurb { color: var(--muted); font-size: 0.92rem; font-style: italic; }
+.card-btn .meta { display: flex; flex-wrap: wrap; gap: 6px 12px; font-family: var(--f-mono); font-size: 0.74rem; color: var(--faint); }
+.card-btn .meta b { color: var(--muted); font-weight: 500; }
+.pts { font-family: var(--f-mono); font-size: 0.8rem; color: var(--muted); white-space: nowrap; text-align: right; }
+.pts b { display: block; font-family: var(--f-display); font-size: 1.25rem; color: var(--fg); font-weight: 700; }
+.card-more { border-top: 1px solid var(--line); padding: 12px 16px 14px; display: flex; flex-direction: column; gap: 10px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-size: 0.8rem; background: var(--panel-2); border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; }
+.chip.sig { border-color: var(--accent); color: var(--accent); }
+.chip-btn { font-size: 0.86rem; background: var(--panel-2); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; }
+.chip-btn[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+
+.picks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.pick { border: 1px dashed var(--line); border-radius: 10px; padding: 8px 6px; min-height: 58px; display: flex; flex-direction: column; gap: 2px; background: none; text-align: left; min-width: 0; }
+.pick.full { border-style: solid; border-color: var(--amber); background: color-mix(in srgb, var(--amber) 8%, var(--panel)); }
+.pick small { font-family: var(--f-mono); font-size: 0.62rem; color: var(--faint); text-transform: uppercase; letter-spacing: 0.06em; }
+.pick span { font-size: 0.8rem; line-height: 1.25; overflow-wrap: anywhere; }
+.hobbies { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.hobby { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px; text-align: left; display: flex; flex-direction: column; gap: 4px; position: relative; min-width: 0; }
+.hobby[aria-pressed="true"] { border-color: var(--amber); }
+.hobby:disabled { opacity: 0.45; cursor: not-allowed; }
+.hobby b { font-family: var(--f-display); font-size: 0.98rem; padding-right: 22px; }
+.hobby .blurb { font-size: 0.8rem; color: var(--muted); }
+.hobby .sk { font-size: 0.76rem; color: var(--faint); }
+.hobby .sk strong { color: var(--fg); font-weight: 500; }
+.hobby .badge { position: absolute; top: 9px; right: 9px; width: 22px; height: 22px; border-radius: 50%; background: var(--amber); color: var(--amber-ink); font-family: var(--f-mono); font-weight: 600; font-size: 0.78rem; display: grid; place-items: center; }
+
+.sheet-id { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 4px; position: relative; overflow: hidden; }
+.sheet-id h2 { font-size: 1.6rem; padding-right: 92px; }
+.sheet-id .line { color: var(--muted); font-size: 0.9rem; }
+.stamp { position: absolute; top: 14px; right: 12px; font-family: var(--f-mono); font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; border: 1.5px solid currentColor; border-radius: 4px; padding: 3px 7px; transform: rotate(4deg); }
+.stamp.draft { color: var(--muted); }
+.stamp.sealed { color: var(--rose); }
+.block { display: flex; flex-direction: column; gap: 10px; }
+.block > h3 { font-size: 0.74rem; font-family: var(--f-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.derived { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.dv { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 10px 6px; display: flex; flex-direction: column; align-items: center; gap: 0; min-width: 0; }
+.dv small { font-family: var(--f-mono); font-size: 0.64rem; letter-spacing: 0.08em; color: var(--muted); text-transform: uppercase; }
+.dv b { font-family: var(--f-display); font-size: 1.35rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.dv.luck b { color: var(--amber); }
+.cr { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
+.cr .row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.cr .money { display: flex; gap: 16px; font-family: var(--f-mono); font-size: 0.8rem; color: var(--muted); font-variant-numeric: tabular-nums; flex-wrap: wrap; }
+.legend { display: flex; gap: 14px; font-size: 0.78rem; color: var(--muted); flex-wrap: wrap; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+.skills { display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; }
+.skill { display: grid; grid-template-columns: minmax(0, 1fr) 46px; gap: 4px 10px; padding: 10px 14px; border-bottom: 1px solid var(--line); align-items: center; }
+.skill:last-child { border-bottom: 0; }
+.skill .nm { font-size: 0.92rem; min-width: 0; }
+.skill .val { font-family: var(--f-display); font-weight: 700; font-size: 1.15rem; text-align: right; font-variant-numeric: tabular-nums; }
+.skill .track { grid-column: 1 / 2; height: 6px; border-radius: 3px; background: var(--panel-2); display: flex; overflow: hidden; }
+.skill .track i { display: block; height: 100%; }
+.skill .hf { font-family: var(--f-mono); font-size: 0.68rem; color: var(--faint); text-align: right; }
+.skill .why { grid-column: 1 / -1; font-family: var(--f-mono); font-size: 0.68rem; color: var(--faint); }
+.skill .why .cap { color: var(--rose); }
+.c-base { background: var(--bar-base); }
+.c-career { background: var(--accent); }
+.c-hobby { background: var(--amber); }
+.missing { background: color-mix(in srgb, var(--danger) 10%, var(--panel)); border: 1px solid color-mix(in srgb, var(--danger) 40%, var(--line)); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
+.missing b { color: var(--danger); font-family: var(--f-display); }
+.missing ul { margin: 0; padding-left: 18px; font-size: 0.88rem; color: var(--muted); }
+.seal { background: var(--panel); border: 1px solid var(--rose); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.seal p { font-size: 0.95rem; }
+.seal .btns { display: flex; gap: 10px; }
+.seal .btns .btn { flex: 1; }
+.btn.rose { background: var(--rose); border-color: var(--rose); color: #2a0b19; }
+
+.files { display: flex; flex-direction: column; gap: 10px; }
+.file { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; text-align: left; width: 100%; display: flex; justify-content: space-between; gap: 12px; align-items: center; }
+.file .who { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.file .who span { font-size: 0.84rem; color: var(--muted); }
+.file .vit { font-family: var(--f-mono); font-size: 0.74rem; color: var(--muted); white-space: nowrap; text-align: right; }
+.empty { border: 1px dashed var(--line); border-radius: 14px; padding: 22px 16px; text-align: center; color: var(--muted); display: flex; flex-direction: column; gap: 10px; align-items: center; }
+
+.about { border-top: 1px solid var(--line); padding-top: 14px; font-size: 0.8rem; color: var(--faint); }
+.about summary { cursor: pointer; color: var(--muted); font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.about p { margin-top: 8px; max-width: 60ch; }
+.engine { font-family: var(--f-mono); font-size: 0.72rem; color: var(--faint); }
+.engine b { color: var(--accent); font-weight: 500; }
+
+.toast {
+  position: fixed; left: 50%; transform: translateX(-50%); z-index: 7;
+  bottom: calc(84px + env(safe-area-inset-bottom, 0px)); width: min(448px, calc(100% - 32px));
+  background: var(--panel-2); border: 1px solid var(--danger); border-radius: 12px; padding: 12px 14px; font-size: 0.9rem;
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.6);
+}
+.toast ul { margin: 6px 0 0; padding-left: 18px; color: var(--muted); font-size: 0.84rem; }
+.boot { padding: 60px 16px; text-align: center; color: var(--muted); }
+
+.reveal { animation: rise .45s ease both; animation-delay: var(--d, 0ms); }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } }
+.pop { animation: pop .7s cubic-bezier(.2, 1.6, .4, 1) both; animation-delay: var(--d, 0ms); }
+@keyframes pop { from { opacity: 0; transform: scale(.4); } }
+@media (prefers-reduced-motion: reduce) { .reveal, .pop { animation: none; } }
+@media (max-width: 360px) { .stats, .derived { grid-template-columns: repeat(2, minmax(0, 1fr)); } .mgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+</style>
+
+<div class="app">
+  <header class="top" id="top"></header>
+  <main id="main"><div class="boot">Loading the rules engine…</div></main>
+</div>
+<div class="bar" id="bar"></div>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+const WASM_B64 = "__WASM_B64__";
+const STEPS = ["Identity", "Age", "The Roll", "Career", "Hobbies", "Sheet"];
+const STAT_ORDER = ["str", "con", "siz", "dex", "app", "pow", "int", "edu"];
+const DICE_3D6 = ["str", "con", "dex", "app", "pow"];
+const BANDS = [
+  { id: "young", name: "Young", ages: "15–19", age: 17, copy: "The universe protects the young.", fx: "No EDU checks · EDU −5 · −5 split across STR and SIZ · Luck rolled twice, keep the better" },
+  { id: "prime", name: "Prime", ages: "20–39", age: 27, copy: "One chance at wisdom, and nothing taken for it.", fx: "1 EDU check · no costs", def: true },
+  { id: "seasoned", name: "Seasoned", ages: "40–59", age: 48, copy: "More chances at wisdom. The body starts sending invoices.", fx: "2 EDU checks (40s) or 3 (50s) · physicals −5 / −10 · APP −5 / −10 · MOV −1 / −2" },
+  { id: "venerable", name: "Venerable", ages: "60–89", age: 65, copy: "Four chances at wisdom; the body pays for all of them.", fx: "4 EDU checks · physicals −20 / −40 / −80 · APP −15 / −20 / −25 · MOV −3 / −4 / −5" },
+];
+const KEY_DRAFT = "phoenix.draft.v1", KEY_FILES = "phoenix.files.v1", KEY_FAST = "phoenix.fast.v1";
+
+/* ---------- the rules engine: the backend's Rust modules compiled to WebAssembly ---------- */
+let wasm;
+const enc = new TextEncoder(), dec = new TextDecoder();
+function api(req) {
+  const b = enc.encode(JSON.stringify(req));
+  const p = wasm.mem_alloc(b.length);
+  new Uint8Array(wasm.memory.buffer, p, b.length).set(b);
+  const n = wasm.call(p, b.length);
+  wasm.mem_free(p, b.length);
+  return JSON.parse(dec.decode(new Uint8Array(wasm.memory.buffer, wasm.out_ptr(), n)));
+}
+
+/* ---------- storage (this device only) ---------- */
+function load(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
+function store(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+
+/* ---------- state ---------- */
+const S = { rec: null, step: 0, phase: "chars", manual: false, fast: load(KEY_FAST, false), view: "wizard", openCareer: null, allSkills: false, confirmSeal: false, anim: null, files: load(KEY_FILES, []) };
+
+function uuid() { try { return crypto.randomUUID(); } catch (e) { return "x" + Date.now().toString(16) + Math.random().toString(16).slice(2); } }
+function newRec() { const now = new Date().toISOString(); return { id: uuid(), ownerId: null, status: "draft", answers: {}, sheet: null, sheetIsSnapshot: false, contentPackId: "starter-modern", createdAt: now, updatedAt: now, finalizedAt: null }; }
+function A() { return S.rec.answers; }
+function D() { return A().dice || {}; }
+function sealed() { return S.rec.status === "finalized"; }
+function reproject() { if (!sealed()) S.rec.sheet = api({ op: "project", answers: A() }).ok; }
+function save() { if (!sealed()) store(KEY_DRAFT, { rec: S.rec, step: S.step, phase: S.phase }); }
+
+function mutate(op, extra) {
+  if (sealed()) { toast("This investigator is sealed. Its answers are frozen."); return false; }
+  const r = api(Object.assign({ op, answers: A() }, extra));
+  if (r.error) { toast(r.error.message, r.error.details); return false; }
+  S.rec.answers = r.ok; S.rec.updatedAt = new Date().toISOString();
+  reproject(); save(); return true;
+}
+const patch = p => mutate("patch", { patch: p });
+const roll = request => mutate("roll", { request, seed: Array.from(crypto.getRandomValues(new Uint8Array(32))) });
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+function esc(s) { return String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+function money(n) { return "$" + Number(n).toLocaleString("en-US"); }
+let toastTimer;
+function toast(msg, details) {
+  const t = $("#toast");
+  t.innerHTML = esc(msg) + (details && details.length ? "<ul>" + details.map(d => "<li>" + esc(d) + "</li>").join("") + "</ul>" : "");
+  t.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.hidden = true; }, 6000);
+}
+function granted() { const s = S.rec.sheet; return s && s.age ? s.age : null; }
+function eduSequence() {
+  const d = D(), g = granted();
+  if (!d.characteristics || !g) return [];
+  let cur = d.characteristics.edu - (g.band === "young" ? 5 : 0);
+  return (d.eduChecks || []).map((c, i) => {
+    const used = i < g.eduChecksGranted, before = cur, hit = used && c.d100 > cur;
+    if (hit) cur = Math.min(99, cur + c.gain);
+    return { ...c, used, before, hit, after: cur };
+  });
+}
+function rollDone() {
+  const d = D(), g = granted();
+  return !!(d.characteristics && g && (d.eduChecks || []).length >= g.eduChecksGranted && d.luck && (d.luck.rolls || []).length === g.luckRollsGranted);
+}
+function careerDone() {
+  const a = A(); if (!a.careerId) return false;
+  const c = api({ op: "careers", characteristics: null }).ok.find(x => x.id === a.careerId);
+  return !!c && c.choiceSlots.every(s => (a.careerChoices || {})[s.id]);
+}
+function stepDone(i) {
+  const a = A();
+  return [!!(a.name && a.name.trim()), !!a.age, rollDone(), careerDone(), (a.hobbyIds || []).length === 4, sealed()][i];
+}
+
+/* ---------- header + bottom bar ---------- */
+function renderTop() {
+  const s = S.rec.sheet, d = s && D().characteristics ? s.derived : null;
+  $("#top").innerHTML = `
+    <div class="top-row"><span class="brand">CoC Phoenix · intake</span>
+      <button class="files-btn" data-act="files">${S.view === "files" ? "Back to form" : "Case files (" + S.files.length + ")"}</button></div>
+    ${S.view === "wizard" ? `<nav class="progress" aria-label="Steps">${STEPS.map((n, i) =>
+      `<button data-act="go" data-step="${i}" class="${i === S.step ? "cur" : stepDone(i) ? "done" : ""}" aria-current="${i === S.step ? "step" : "false"}"><i></i><span>${i === S.step ? i + 1 + " · " + n : i + 1}</span></button>`).join("")}</nav>
+    <div class="vitals">${d ? `<span>HP <b>${d.hitPoints}</b></span><span>SAN <b>${d.sanity}</b></span><span>MP <b>${d.magicPoints}</b></span>${D().luck ? `<span>LUCK <b>${d.luck}</b></span>` : ""}` : `<span>${esc(A().name || "Unnamed investigator")}</span>`}</div>` : ""}`;
+}
+function renderBar() {
+  if (S.view === "files") { $("#bar").innerHTML = `<div class="bar-in"><button class="btn pri" data-act="new">Start a new investigator</button></div>`; return; }
+  const last = S.step === STEPS.length - 1;
+  const nextLabel = S.step === 2 && S.phase !== "luck" ? (S.phase === "chars" ? "Next: EDU checks" : "Next: Luck") : last ? "" : "Next: " + STEPS[S.step + 1];
+  const nextOff = S.step === 0 && !stepDone(0);
+  $("#bar").innerHTML = `<div class="bar-in">
+    <button class="btn ghost" data-act="back" ${S.step === 0 && S.phase === "chars" ? "disabled" : ""}>Back</button>
+    ${last ? (sealed() ? `<button class="btn pri" data-act="new">Start a new investigator</button>` : `<button class="btn pri" data-act="seal-ask" ${S.rec.sheet && S.rec.sheet.completeness.readyToFinalize ? "" : "disabled"}>Sign and seal</button>`)
+           : `<button class="btn pri" data-act="next" ${nextOff ? "disabled" : ""}>${nextLabel}</button>`}
+  </div>`;
+}
+
+/* ---------- steps ---------- */
+function about() {
+  return `<details class="about"><summary>About this page</summary>
+    <p class="engine">Rules engine: <b>the CoC Phoenix backend's Rust code, compiled to WebAssembly</b>, running in your browser. Same answers, same sheet as the server. Saved on this device only.</p>
+    <p>This tool uses trademarks and/or copyrights owned by Chaosium Inc/Moon Design Publications LLC, which are used under Chaosium Inc's Fan Material Policy. We are expressly prohibited from charging you to use or access this content. This tool is not published, endorsed, or specifically approved by Chaosium Inc. For more information about Chaosium Inc's products, please visit www.chaosium.com.</p>
+  </details>`;
+}
+
+function stepIdentity() {
+  const a = A(), init = (a.name || "?").trim().split(/\s+/).map(w => w[0]).slice(0, 2).join("").toUpperCase();
+  return `<div class="head"><span class="eyebrow">Step 1 · Identity</span><h2>Who are you?</h2>
+    <p class="sub">A name is all we need to open your file. Everything else can change until you sign.</p></div>
+    <div class="portrait"><div class="ph" id="initials">${esc(init)}</div><p>Portrait upload comes later. For now, your initials hold the spot.</p></div>
+    <div class="field"><label for="name">Name</label><input id="name" autocomplete="off" placeholder="Ada Kowalski" value="${esc(a.name || "")}"></div>
+    <div class="field"><label for="pronouns">Pronouns or a few words</label><input id="pronouns" autocomplete="off" placeholder="she/her, they/them, or anything" value="${esc(a.pronouns || "")}">
+      <small>Pure flavor. It has no effect on the rules.</small></div>
+    <p class="muted" style="font-size:.9rem">Just looking? <button class="linkish" data-act="sample">Fill in a sample investigator</button> and jump to the sheet.</p>
+    ${about()}`;
+}
+
+function stepAge() {
+  const a = A(), band = a.ageBand || (a.age ? null : null);
+  return `<div class="head"><span class="eyebrow">Step 2 · Age</span><h2>How long have you been alive?</h2>
+    <p class="sub">Asked before the dice, so the numbers you roll are your real ones. Age trades the body for chances at wisdom.</p></div>
+    <div class="choices" role="radiogroup" aria-label="Age band">${BANDS.map(b => `
+      <button class="choice" data-act="band" data-band="${b.id}" role="radio" aria-pressed="${band === b.id}" aria-checked="${band === b.id}">
+        <div class="row"><h3>${b.name}${b.def ? ` <span class="tag">most pick this</span>` : ""}</h3><span class="ages">${b.ages}</span></div>
+        <span class="copy">${b.copy}</span><span class="fx">${b.fx}</span></button>`).join("")}</div>
+    <div class="field"><label for="age">Exact age</label><input id="age" type="number" inputmode="numeric" min="15" max="89" value="${a.age ?? ""}" placeholder="27">
+      <small>Exact age picks the decade within a band. Changing band after rolling may ask for fresh EDU checks or Luck.</small></div>`;
+}
+
+function phaseTabs() {
+  const d = D(), g = granted();
+  const st = [!!d.characteristics, !!(g && (d.eduChecks || []).length >= g.eduChecksGranted && d.characteristics), !!(d.luck && g && d.luck.rolls.length === g.luckRollsGranted)];
+  return `<div class="phases">${[["chars", "Characteristics"], ["edu", "EDU checks"], ["luck", "Luck"]].map(([id, n], i) =>
+    `<button class="phase ${st[i] ? "ok" : ""}" data-act="phase" data-phase="${id}" aria-current="${S.phase === id ? "step" : "false"}">${n}<b>${st[i] ? "done" : "to roll"}</b></button>`).join("")}</div>`;
+}
+function toggles() {
+  return `<div class="toggles">
+    <button class="toggle" data-act="manual" aria-pressed="${S.manual}"><i></i>I rolled at home</button>
+    <button class="toggle" data-act="fast" aria-pressed="${S.fast}"><i></i>Just show me the results</button></div>`;
+}
+function stepRoll() {
+  const g = granted();
+  if (!A().age) return `<div class="head"><span class="eyebrow">Step 3 · The Roll</span><h2>Age first, then dice.</h2>
+    <p class="sub">The dice need to know how old you are so they can show your real numbers.</p></div>
+    <button class="btn pri big" data-act="go" data-step="1">Answer the age question</button>`;
+  let body = "";
+  if (S.phase === "chars") body = S.manual ? manualChars() : rollChars();
+  if (S.phase === "edu") body = S.manual ? manualEdu() : rollEdu();
+  if (S.phase === "luck") body = S.manual ? manualLuck() : rollLuck();
+  const title = { chars: "Eight numbers that are you.", edu: "Did the world educate you?", luck: "How does the universe feel about you?" }[S.phase];
+  const sub = {
+    chars: "STR, CON, DEX, APP and POW roll 3D6 × 5. SIZ, INT and EDU roll (2D6 + 6) × 5. Reroll as often as you like.",
+    edu: `Each check rolls d100. Beat your current EDU and life teaches you something: +1D10 EDU. You get ${g ? g.eduChecksGranted : 0} ${g && g.eduChecksGranted === 1 ? "check" : "checks"} for your age.`,
+    luck: "3D6 × 5. In play you spend Luck to turn failures into successes, so this is the number you'll have feelings about all campaign.",
+  }[S.phase];
+  return `<div class="head"><span class="eyebrow">Step 3 · The Roll</span><h2>${title}</h2><p class="sub">${sub}</p></div>
+    ${phaseTabs()}${toggles()}${body}`;
+}
+function rollChars() {
+  const d = D(), s = S.rec.sheet;
+  if (!d.characteristics) return `<button class="btn luck big" data-act="roll" data-ceremony="characteristics">Roll the dice</button>`;
+  const adj = {}; (s.ageAdjustments || []).forEach(x => { if (x.characteristic !== "edu" || x.reason.indexOf("life") < 0) adj[x.characteristic] = (adj[x.characteristic] || 0) + x.delta; });
+  const anim = S.anim === "chars" && !S.fast;
+  const tiles = STAT_ORDER.map((k, i) => {
+    const v = s.characteristics.find(c => c.id === k), faces = (d.characteristicRolls || {})[k] || [];
+    const raw = d.characteristics[k], shown = k === "edu" ? raw + (adj.edu || 0) : v.value;
+    return `<div class="stat ${adj[k] ? "adj" : ""} ${anim ? "pop" : ""}" style="--d:${i * 90}ms">
+      <small>${k.toUpperCase()}</small><b class="${anim ? "tumble" : ""}" data-final="${shown}">${shown}</b>
+      <span class="faces">${faces.length ? faces.join(" ") + (DICE_3D6.includes(k) ? "" : " +6") : "declared"}</span>
+      <span class="hf">${Math.floor(shown / 2)} · ${Math.floor(shown / 5)}</span></div>`;
+  }).join("");
+  const adjText = Object.entries(adj).filter(([k]) => k !== "edu").map(([k, v]) => `${k.toUpperCase()} ${v}`).join(", ");
+  return `<div class="stats">${tiles}</div>
+    ${adjText ? `<p class="note">Age already applied: <b>${adjText}</b>. The physical cost lands wherever your career needs it least, so it can move once you pick one.</p>` : ""}
+    <p class="note">Small numbers under each stat are its half and fifth, the values you'll use for Hard and Extreme rolls. EDU checks come next.</p>
+    <button class="btn wide" data-act="roll" data-ceremony="characteristics">Reroll all eight</button>`;
+}
+function rollEdu() {
+  const d = D(), g = granted();
+  if (!d.characteristics) return `<p class="note">Roll your characteristics first. The checks are made against your EDU.</p><button class="btn wide" data-act="phase" data-phase="chars">Back to characteristics</button>`;
+  if (g.eduChecksGranted === 0) return `<div class="check"><span class="q">Young investigators get no checks</span><span class="v">Your schooling isn't finished yet.</span></div>
+    <button class="btn pri wide" data-act="phase" data-phase="luck">On to Luck</button>`;
+  const seq = eduSequence();
+  if (seq.length < g.eduChecksGranted) return `<button class="btn luck big" data-act="roll" data-ceremony="edu_checks">Roll ${g.eduChecksGranted} ${g.eduChecksGranted === 1 ? "check" : "checks"}</button>`;
+  const anim = S.anim === "edu" && !S.fast, step = 900;
+  const rows = seq.map((c, i) => `<div class="check ${c.used ? "" : "unused"} ${anim ? "reveal" : ""}" style="--d:${i * step}ms">
+      <span class="q">Check ${i + 1} · rolled ${c.d100} against EDU ${c.before}</span>
+      ${c.used ? `<span class="v ${c.hit ? "yes" : "no"} ${anim ? "reveal" : ""}" style="--d:${i * step + 450}ms">${c.hit ? `It did. +${c.gain} EDU` : "Not this time."}</span>` : `<span class="v no">Not used at this age</span>`}</div>`).join("");
+  const last = seq.filter(c => c.used).slice(-1)[0];
+  return `<div class="checks">${rows}</div>
+    <p class="note ${anim ? "reveal" : ""}" style="--d:${seq.length * step}ms">EDU is now <b>${last ? last.after : d.characteristics.edu}</b>${last && last.after === 99 ? " (the ceiling)" : ""}.</p>
+    <button class="btn wide" data-act="roll" data-ceremony="edu_checks">Reroll the checks</button>`;
+}
+function rollLuck() {
+  const d = D(), g = granted(), s = S.rec.sheet;
+  if (d.luck && d.luck.rolls.length !== g.luckRollsGranted) return `<p class="note">Your age band changed since you rolled Luck. ${g.luckRollsGranted === 2 ? "Young investigators roll twice." : "Roll once more."}</p>
+    <button class="btn luck big" data-act="roll" data-ceremony="luck">Roll Luck</button>`;
+  if (!d.luck) return `<div class="luck-stage"><span class="muted">${g.luckRollsGranted === 2 ? "You're young. You roll twice and keep the better." : "One roll. Make it count."}</span><span class="num">?</span></div>
+    <button class="btn luck big" data-act="roll" data-ceremony="luck">Roll Luck</button>`;
+  const anim = S.anim === "luck" && !S.fast, bonus = s.derived.luckBonus;
+  const pair = d.luck.rolls.length > 1 ? `<div class="pair ${anim ? "reveal" : ""}">${d.luck.rolls.map(r => r === d.luck.kept ? `<span>kept ${r}</span>` : `<s>${r}</s>`).join("<span>·</span>")}</div>` : "";
+  return `<div class="luck-stage"><span class="muted">${anim ? "The universe considers you…" : "Luck"}</span>
+      <span class="num ${anim ? "pop" : ""}" style="--d:${anim ? 650 : 0}ms">${s.derived.luck}</span>${pair}
+      ${bonus ? `<span class="tag amber">+${bonus} Jack of All Trades perk (house rule)</span>` : ""}</div>
+    <button class="btn wide" data-act="roll" data-ceremony="luck">Reroll Luck</button>`;
+}
+function manualChars() {
+  const c = D().characteristics || {};
+  return `<div class="manual"><p class="note">Enter each value after multiplying by 5. STR, CON, DEX, APP, POW: 15–90. SIZ, INT, EDU: 40–90. Raw rolls, before age.</p>
+    <div class="mgrid">${STAT_ORDER.map(k => `<div class="field"><label for="m-${k}">${k.toUpperCase()}</label><input id="m-${k}" type="number" inputmode="numeric" step="5" value="${c[k] ?? ""}"></div>`).join("")}</div>
+    <button class="btn pri" data-act="declare" data-what="chars">Save these numbers</button></div>`;
+}
+function manualEdu() {
+  const g = granted(), ex = D().eduChecks || [];
+  if (!g || g.eduChecksGranted === 0) return `<p class="note">No EDU checks at this age.</p>`;
+  return `<div class="manual"><p class="note">For each check: the d100 you rolled, and the d10 you'd add if it beat your EDU. A d10 showing 0 counts as 10.</p>
+    ${Array.from({ length: g.eduChecksGranted }, (_, i) => `<div class="mgrid two">
+      <div class="field"><label for="e-d-${i}">Check ${i + 1} d100</label><input id="e-d-${i}" type="number" inputmode="numeric" min="1" max="100" value="${ex[i] ? ex[i].d100 : ""}"></div>
+      <div class="field"><label for="e-g-${i}">d10 gain</label><input id="e-g-${i}" type="number" inputmode="numeric" min="1" max="10" value="${ex[i] ? ex[i].gain : ""}"></div></div>`).join("")}
+    <button class="btn pri" data-act="declare" data-what="edu">Save these checks</button></div>`;
+}
+function manualLuck() {
+  const g = granted(), ex = (D().luck || {}).rolls || [];
+  return `<div class="manual"><p class="note">3D6 × 5, so 15–90.${g.luckRollsGranted === 2 ? " You're young: enter both rolls and the better one is kept." : ""}</p>
+    <div class="mgrid two">${Array.from({ length: g.luckRollsGranted }, (_, i) => `<div class="field"><label for="l-${i}">Roll ${i + 1}</label><input id="l-${i}" type="number" inputmode="numeric" step="5" value="${ex[i] ?? ""}"></div>`).join("")}</div>
+    <button class="btn pri" data-act="declare" data-what="luck">Save Luck</button></div>`;
+}
+
+function stepCareer() {
+  const a = A(), chars = D().characteristics || null;
+  const cards = api({ op: "careers", characteristics: chars }).ok;
+  const top = chars ? cards[0].fit : 0;
+  const list = cards.map(c => {
+    const sel = a.careerId === c.id, open = sel || S.openCareer === c.id;
+    const strong = chars && c.fit >= top * 0.93;
+    const skills = [c.signatureSkill ? `<span class="chip sig">${esc(c.signatureSkill.name)}</span>` : ""]
+      .concat(c.supportingSkills.map(s => `<span class="chip">${esc(s.name || s.prompt)}</span>`)).join("");
+    const choices = sel ? c.choiceSlots.map(slot => `<div class="field"><label>${esc(slot.prompt)}</label><div class="chips">${slot.options.map(o =>
+      `<button class="chip-btn" data-act="choice" data-slot="${slot.id}" data-opt="${o.id}" aria-pressed="${(a.careerChoices || {})[slot.id] === o.id}">${esc(o.label)}</button>`).join("")}</div></div>`).join("") : "";
+    return `<div class="card" data-selected="${sel}">
+      <button class="card-btn" data-act="career" data-id="${c.id}" aria-pressed="${sel}">
+        <div class="row"><div style="display:flex;flex-direction:column;gap:4px;min-width:0"><h3>${esc(c.name)}</h3>${strong ? `<span><span class="tag fit">Made for you</span></span>` : ""}</div>
+          ${chars ? `<span class="pts"><b>${c.fit}</b>skill pts</span>` : ""}</div>
+        <span class="blurb">${esc(c.blurb)}</span>
+        <span class="meta"><span>Suits <b>${esc(c.formula.replace(/ x /g, "×"))}</b></span>${c.signatureSkill ? `<span>Signature <b>${esc(c.signatureSkill.name)}</b></span>` : ""}<span>Credit <b>${c.creditRating.min}–${c.creditRating.max}</b></span></span>
+      </button>
+      ${open ? `<div class="card-more"><div class="chips">${skills}</div>
+        ${c.slotsFromHobbies ? `<p class="note">The rest of the career pool flows into your own hobby picks.</p>` : ""}
+        ${c.bonuses && c.bonuses.luck ? `<p class="note">Perk: <b>+${c.bonuses.luck} starting Luck</b>. A CoC Phoenix house rule, not from the rulebook.</p>` : ""}
+        ${choices}</div>` : ""}
+    </div>`;
+  }).join("");
+  return `<div class="head"><span class="eyebrow">Step 4 · Career</span><h2>What do you do for a living?</h2>
+    <p class="sub">${chars ? "Sorted by how many skill points your rolls earn in each job. Tap one to see what it trains." : "Roll your characteristics first and this list sorts itself by what pays you best."}</p></div>
+    <div class="cards">${list}</div>`;
+}
+
+function stepHobbies() {
+  const ids = A().hobbyIds || [], hobbies = api({ op: "hobbies" }).ok, byId = Object.fromEntries(hobbies.map(h => [h.id, h]));
+  const labels = ["Passion", "Second", "Third", "Fourth"];
+  return `<div class="head"><span class="eyebrow">Step 5 · Hobbies</span><h2>What do you do when you're not working?</h2>
+    <p class="sub">Pick four. Order matters: your first pick is your passion and gets the most points. Overlapping your career is fine.</p></div>
+    <div class="picks">${labels.map((l, i) => ids[i] ? `<button class="pick full" data-act="hobby" data-id="${ids[i]}" aria-label="Remove ${esc(byId[ids[i]].name)}"><small>${i + 1} · ${l}</small><span>${esc(byId[ids[i]].name)}</span></button>`
+      : `<div class="pick"><small>${i + 1} · ${l}</small><span class="muted">—</span></div>`).join("")}</div>
+    <div class="hobbies">${hobbies.map(h => {
+      const n = ids.indexOf(h.id), on = n >= 0;
+      return `<button class="hobby" data-act="hobby" data-id="${h.id}" aria-pressed="${on}" ${!on && ids.length >= 4 ? "disabled" : ""}>
+        ${on ? `<span class="badge">${n + 1}</span>` : ""}<b>${esc(h.name)}</b><span class="blurb">${esc(h.blurb)}</span>
+        <span class="sk"><strong>${esc(h.primarySkill.name)}</strong> · ${esc(h.secondarySkill.name)}</span></button>`;
+    }).join("")}</div>`;
+}
+
+function stepSheet() {
+  const s = S.rec.sheet, a = A();
+  if (!s) return "";
+  const rolled = !!D().characteristics;
+  const meta = [a.pronouns, s.age && s.age.age ? `age ${s.age.age}` : "", s.career ? s.career.name : ""].filter(Boolean).map(esc).join(" · ");
+  const trained = s.skills.filter(k => k.careerPoints + k.personalPoints > 0).sort((x, y) => y.value - x.value);
+  const list = S.allSkills ? s.skills : trained;
+  const skillRows = list.map(k => {
+    const b = k.base, c = Math.max(0, Math.min(k.careerPoints, k.value - b)), h = Math.max(0, k.value - b - c);
+    const why = [`base ${k.base}`, k.careerPoints ? `career +${k.careerPoints}` : "", k.personalPoints ? `hobby +${k.personalPoints}` : ""].filter(Boolean).join(" · ");
+    return `<div class="skill"><span class="nm">${esc(k.name)}</span><span class="val">${k.value}</span>
+      <span class="track" aria-hidden="true"><i class="c-base" style="width:${b}%"></i><i class="c-career" style="width:${c}%"></i><i class="c-hobby" style="width:${h}%"></i></span>
+      <span class="hf">${k.half} · ${k.fifth}</span>
+      <span class="why">${why}${k.pointsLostToCap ? ` · <span class="cap">capped at 75, ${k.pointsLostToCap} lost</span>` : ""}</span></div>`;
+  }).join("");
+  const dv = s.derived, cr = s.creditRating;
+  const miss = !sealed() && !s.completeness.readyToFinalize ? `<div class="missing"><b>Not ready to sign yet</b><ul>${s.completeness.missing.map(m => `<li>${esc(m)}</li>`).join("")}</ul></div>` : "";
+  const seal = S.confirmSeal && !sealed() ? `<div class="seal" id="seal"><h3>Sign the file?</h3>
+      <p>Once sealed, this record can't be edited. Your numbers become a fact, and somewhere, something now has your name.</p>
+      <div class="btns"><button class="btn" data-act="seal-no">Not yet</button><button class="btn rose" data-act="seal-yes">Seal it</button></div></div>` : "";
+  return `<div class="sheet-id"><span class="eyebrow">Step 6 · The Sheet</span><h2>${esc(a.name || "Unnamed investigator")}</h2>
+      <span class="line">${meta || "Answers still missing"}</span>
+      ${s.career ? `<span class="line" style="font-style:italic">${esc(s.career.blurb)}</span>` : ""}
+      <span class="stamp ${sealed() ? "sealed" : "draft"}">${sealed() ? "Sealed " + new Date(S.rec.finalizedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "Draft · live"}</span></div>
+    ${miss}${seal}
+    ${rolled ? `<section class="block"><h3>Characteristics · value · half · fifth</h3><div class="stats">${s.characteristics.map(c =>
+      `<div class="stat"><small>${c.id.toUpperCase()}</small><b>${c.value}</b><span class="hf">${c.half} · ${c.fifth}</span></div>`).join("")}</div></section>
+    <section class="block"><h3>Derived</h3><div class="derived">
+      <div class="dv"><small>HP</small><b>${dv.hitPoints}</b></div><div class="dv"><small>MP</small><b>${dv.magicPoints}</b></div>
+      <div class="dv"><small>Sanity</small><b>${dv.sanity}</b></div><div class="dv luck"><small>Luck</small><b>${D().luck ? dv.luck : "—"}</b></div>
+      <div class="dv"><small>Dmg bonus</small><b>${esc(dv.damageBonus)}</b></div><div class="dv"><small>Build</small><b>${dv.build}</b></div>
+      <div class="dv"><small>Move</small><b>${dv.moveRate}</b></div><div class="dv"><small>Dodge</small><b>${s.skills.find(k => k.id === "dodge")?.value ?? dv.dodgeBase}</b></div></div></section>` : `<p class="note">Roll your dice and the characteristics, HP, Sanity and the rest appear here.</p>`}
+    ${s.career ? `<section class="block"><h3>Money</h3><div class="cr"><div class="row"><h3>${esc(cr.descriptor)}</h3><span class="mono tnum">CR ${cr.value}</span></div>
+      <div class="money"><span>Spending level ${money(cr.spendingLevel)}</span><span>Assets ${money(cr.assets)}</span></div></div></section>` : ""}
+    <section class="block"><h3>Skills · ${S.allSkills ? "all " + s.skills.length : trained.length + " trained"}</h3>
+      <div class="legend"><span><i class="c-base"></i>Base</span><span><i class="c-career"></i>Career</span><span><i class="c-hobby"></i>Hobbies</span></div>
+      ${list.length ? `<div class="skills">${skillRows}</div>` : `<p class="note">Pick a career and hobbies to train skills.</p>`}
+      <button class="linkish" data-act="allskills">${S.allSkills ? "Show trained skills only" : "Show all " + s.skills.length + " skills"}</button></section>
+    <section class="block"><h3>Backstory</h3><p class="note">Fate tables for ideology, a significant person, a place, a possession and a trait arrive with a later content pass.</p></section>
+    ${about()}`;
+}
+
+function viewFiles() {
+  const files = S.files.slice().reverse();
+  return `<div class="head"><span class="eyebrow">Case files</span><h2>Your investigators</h2>
+    <p class="sub">Sealed files, kept on this device. Tap one to open its sheet.</p></div>
+    ${files.length ? `<div class="files">${files.map(f => {
+      const d = f.sheet.derived;
+      return `<button class="file" data-act="open" data-id="${f.id}"><span class="who"><h3>${esc(f.answers.name)}</h3><span>${esc(f.sheet.career ? f.sheet.career.name : "")} · age ${f.answers.age}</span></span>
+        <span class="vit">HP ${d.hitPoints} · SAN ${d.sanity}<br>LUCK ${d.luck}</span></button>`;
+    }).join("")}</div>` : `<div class="empty"><h3>No sealed files yet</h3><p>Finish the six steps and sign your first investigator. It will be filed here.</p></div>`}`;
+}
+
+/* ---------- render ---------- */
+function render() {
+  renderTop(); renderBar();
+  const m = $("#main");
+  m.innerHTML = S.view === "files" ? viewFiles() : [stepIdentity, stepAge, stepRoll, stepCareer, stepHobbies, stepSheet][S.step]();
+  if (S.anim === "chars" && !S.fast) tumble();
+  S.anim = null;
+}
+function tumble() {
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce) return;
+  document.querySelectorAll("b.tumble").forEach((el, i) => {
+    const final = el.dataset.final, end = performance.now() + 380 + i * 90;
+    const tick = () => { if (performance.now() >= end) { el.textContent = final; return; } el.textContent = 5 * (3 + Math.floor(Math.random() * 16)); requestAnimationFrame(tick); };
+    tick();
+  });
+}
+function goStep(n) { S.step = Math.max(0, Math.min(STEPS.length - 1, n)); S.confirmSeal = false; if (S.step === 2 && !S.manual) S.phase = S.phase || "chars"; save(); render(); window.scrollTo(0, 0); }
+
+/* ---------- actions ---------- */
+function intVal(id) { const el = document.getElementById(id); if (!el || el.value.trim() === "") return null; return parseInt(el.value, 10); }
+const ACT = {
+  go: e => goStep(+e.dataset.step),
+  next: () => {
+    if (S.step === 2 && S.phase !== "luck") { S.phase = S.phase === "chars" ? "edu" : "luck"; save(); render(); window.scrollTo(0, 0); return; }
+    if (S.step === 1 && !A().age) patch({ ageBand: "prime" });
+    if (S.step === 1) S.phase = "chars";
+    goStep(S.step + 1);
+  },
+  back: () => {
+    if (S.step === 2 && S.phase !== "chars") { S.phase = S.phase === "luck" ? "edu" : "chars"; save(); render(); return; }
+    if (S.step === 3) S.phase = "luck";
+    goStep(S.step - 1);
+  },
+  band: e => { const b = BANDS.find(x => x.id === e.dataset.band); if (patch({ age: b.age })) render(); },
+  phase: e => { S.phase = e.dataset.phase; save(); render(); },
+  manual: () => { S.manual = !S.manual; render(); },
+  fast: () => { S.fast = !S.fast; store(KEY_FAST, S.fast); render(); },
+  roll: e => {
+    const c = e.dataset.ceremony;
+    if (roll({ ceremony: c })) { S.anim = { characteristics: "chars", edu_checks: "edu", luck: "luck" }[c]; render(); }
+  },
+  declare: e => {
+    const w = e.dataset.what, req = { ceremony: "declared" };
+    if (w === "chars") {
+      const c = {}; for (const k of STAT_ORDER) { const v = intVal("m-" + k); if (v === null) return toast("Fill in all eight characteristics."); c[k] = v; }
+      req.characteristics = c;
+    }
+    if (w === "edu") {
+      const n = granted().eduChecksGranted, checks = [];
+      for (let i = 0; i < n; i++) { const d = intVal("e-d-" + i), g = intVal("e-g-" + i); if (d === null || g === null) return toast("Fill in every check: the d100 and the d10."); checks.push({ d100: d, gain: g }); }
+      req.eduChecks = checks;
+    }
+    if (w === "luck") {
+      const n = granted().luckRollsGranted, rolls = [];
+      for (let i = 0; i < n; i++) { const v = intVal("l-" + i); if (v === null) return toast(n === 2 ? "Enter both Luck rolls." : "Enter your Luck roll."); rolls.push(v); }
+      req.luck = rolls;
+    }
+    if (roll(req)) { toast2("Saved. Marked as rolled at home."); render(); }
+  },
+  career: e => {
+    const id = e.dataset.id;
+    if (A().careerId === id) { S.openCareer = S.openCareer === id ? null : id; render(); return; }
+    if (patch({ careerId: id })) { S.openCareer = id; render(); }
+  },
+  choice: e => { const ch = Object.assign({}, A().careerChoices || {}, { [e.dataset.slot]: e.dataset.opt }); if (patch({ careerChoices: ch })) render(); },
+  hobby: e => {
+    const id = e.dataset.id, ids = (A().hobbyIds || []).slice(), i = ids.indexOf(id);
+    if (i >= 0) ids.splice(i, 1); else if (ids.length < 4) ids.push(id); else return;
+    if (patch({ hobbyIds: ids })) render();
+  },
+  allskills: () => { S.allSkills = !S.allSkills; render(); },
+  "seal-ask": () => { S.confirmSeal = true; render(); const el = $("#seal"); if (el) el.scrollIntoView({ block: "center", behavior: "smooth" }); },
+  "seal-no": () => { S.confirmSeal = false; render(); },
+  "seal-yes": () => {
+    const r = api({ op: "finalize", answers: A() });
+    if (r.error) return toast(r.error.message, r.error.details);
+    Object.assign(S.rec, { status: "finalized", sheet: r.ok, sheetIsSnapshot: true, finalizedAt: new Date().toISOString() });
+    S.files.push(JSON.parse(JSON.stringify(S.rec))); store(KEY_FILES, S.files);
+    try { localStorage.removeItem(KEY_DRAFT); } catch (e) {}
+    S.confirmSeal = false; render(); window.scrollTo(0, 0);
+  },
+  files: () => { S.view = S.view === "files" ? "wizard" : "files"; render(); window.scrollTo(0, 0); },
+  open: e => { const f = S.files.find(x => x.id === e.dataset.id); if (!f) return; S.rec = JSON.parse(JSON.stringify(f)); S.view = "wizard"; S.step = 5; render(); window.scrollTo(0, 0); },
+  new: () => { S.rec = newRec(); reproject(); S.step = 0; S.phase = "chars"; S.view = "wizard"; S.allSkills = false; save(); render(); window.scrollTo(0, 0); },
+  sample: () => {
+    patch({ name: "Ada Kowalski (sample)", pronouns: "she/her", age: 48 });
+    roll({ ceremony: "characteristics" }); roll({ ceremony: "edu_checks" }); roll({ ceremony: "luck" });
+    const best = api({ op: "careers", characteristics: D().characteristics }).ok.find(c => !c.choiceSlots.length);
+    patch({ careerId: best.id, hobbyIds: ["occult-curiosity", "people-watching", "poker-nights", "bookworm"] });
+    S.phase = "luck"; goStep(5);
+  },
+};
+function toast2(msg) { const t = $("#toast"); t.textContent = msg; t.style.borderColor = "var(--accent)"; t.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.hidden = true; t.style.borderColor = ""; }, 2500); }
+
+document.addEventListener("click", e => {
+  const el = e.target.closest("[data-act]");
+  if (!el || el.disabled) return;
+  const fn = ACT[el.dataset.act]; if (fn) fn(el);
+});
+let typing;
+document.addEventListener("input", e => {
+  const id = e.target.id;
+  if (id === "name" || id === "pronouns") {
+    clearTimeout(typing);
+    const v = e.target.value;
+    typing = setTimeout(() => { patch({ [id]: v }); renderTop(); renderBar(); }, 250);
+    if (id === "name") { const ini = $("#initials"); if (ini) ini.textContent = (v || "?").trim().split(/\s+/).map(w => w[0]).slice(0, 2).join("").toUpperCase() || "?"; }
+    if (id === "name") { const nb = document.querySelector('[data-act="next"]'); if (nb) nb.disabled = !v.trim(); }
+  }
+});
+document.addEventListener("change", e => {
+  if (e.target.id === "age") { const v = intVal("age"); if (v !== null && patch({ age: v })) render(); }
+});
+
+/* ---------- boot ---------- */
+(async function boot() {
+  try {
+    const bin = Uint8Array.from(atob(WASM_B64), c => c.charCodeAt(0));
+    const { instance } = await WebAssembly.instantiate(bin, {});
+    wasm = instance.exports;
+    const saved = load(KEY_DRAFT, null);
+    if (saved && saved.rec && saved.rec.status === "draft") { S.rec = saved.rec; S.step = saved.step || 0; S.phase = saved.phase || "chars"; }
+    else S.rec = newRec();
+    reproject(); render();
+  } catch (err) {
+    $("#main").innerHTML = `<div class="boot"><h3>The rules engine didn't load.</h3><p>${esc(err && err.message)}</p></div>`;
+  }
+})();
+</script>
