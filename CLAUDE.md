@@ -23,6 +23,9 @@ A Call of Cthulhu 7th Edition tracker — backend-first, free hosted web app. Cu
 - `docs/design/` — numbered design specs. `01-signup-wizard-spec.md` is the signup flow +
   starter content roster (17 careers, 17 hobbies, allocation rules) and is the handoff brief for
   the UI prototype.
+- `prototype/` — throwaway, browser-only build of the signup wizard (2026-11-10, user-requested):
+  the backend's pure rules modules compiled to WebAssembly plus a phone-sized UI. Not the real
+  front end. `prototype/README.md` covers building it and what must be kept in sync by hand.
 
 ## Decisions already made (don't re-litigate)
 
