@@ -22,7 +22,8 @@ A Call of Cthulhu 7th Edition tracker — backend-first, free hosted web app. Cu
   runtime layer the two `30`s.
 - `docs/design/` — numbered design specs. `01-signup-wizard-spec.md` is the signup flow +
   starter content roster (17 careers, 17 hobbies, allocation rules) and is the handoff brief for
-  the UI prototype.
+  the UI prototype. `02-style-references.md` credits the visual references (images stay local in
+  the gitignored `docs/design/references/`); `03-style-directions.md` is the chosen visual style.
 - `prototype/` — throwaway, browser-only build of the signup wizard (2026-11-10, user-requested):
   the backend's pure rules modules compiled to WebAssembly plus a phone-sized UI. Not the real
   front end. `prototype/README.md` covers building it and what must be kept in sync by hand.
@@ -38,6 +39,9 @@ A Call of Cthulhu 7th Edition tracker — backend-first, free hosted web app. Cu
 - Dice: server rolls by default, manual "rolled at home" entry supported
   (`diceSource: server | declared`); unlimited rerolls at creation.
 - Jack of All Trades career carries a +10 Luck perk — an explicit, toggleable house rule.
+- Visual style: "1-bit with blood" — black ink on bone, a pixel font (DotGothic16), blood red as
+  the one accent (decided 2026-11-10; `docs/design/03-style-directions.md`). Art is generated in
+  code or adapted from public-domain prints, never taken from the reference works.
 
 ## Working rules
 
